@@ -1,0 +1,57 @@
+
+Jenkins Installation 
+
+sudo apt update
+sudo apt install openjdk-11-jdk
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins
+
+puppet Installation
+
+wget https://apt.puppet.com/puppet-release-bionic.deb 
+sudo dpkg -i puppet-release-bionic.deb 
+sudo apt update 
+sudo apt install puppetserver -y 
+
+Docker Installation
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install docker-ce -y
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl status docker
+sudo usermod -aG docker $USER
+
+
+Kubernetes Installation
+
+sudo apt update
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+sudo apt install apt-transport-https ca-certificates curl -y
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+sudo apt update
+sudo apt install kubeadm kubelet kubectl -y
+sudo apt-mark hold kubeadm kubelet kubectl
+
+
+Git Installation
+
+sudo apt update
+sudo apt install git -y
+git --version
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+repo: https://github.com/mrranger939/dev2
+

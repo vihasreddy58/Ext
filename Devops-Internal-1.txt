@@ -1,0 +1,147 @@
+Devops Internal-1
+
+1.Git 
+#Installation
+
+sudo apt update
+sudo apt install git -y
+git --version
+git config --global user.name "Your Name"
+git config --global user.email your@email.com
+
+Local Repository Commands
+
+git init
+git add filename.js
+git add .   # add all files
+git commit -m "Initial commit"
+git status
+
+# 5. View commit history
+git log
+
+# 6. Create / switch branches
+git branch
+git checkout -b new-branch
+
+# 1. Connect local repository to remote GitHub repo
+git remote add origin https://github.com/user/repo.git
+
+# 2. Push local commits to remote repository
+git push origin main
+
+# 3. Pull & merge updates from remote repository
+git pull origin main
+
+# 4. Clone a remote repository
+git clone https://github.com/user/repo.git
+
+# 5. Fetch remote changes without merging
+git fetch
+
+2 Master Slave Architecture
+1. Create Slave Node
+•	Dashboard ? Manage Jenkins ? Nodes ? New Node
+•	Name: slave_node
+•	Type: Permanent Agent ? OK
+•	Remote Root Directory:
+mkdir ~/jenkins-agent(run in terminal)
+in Jenkins enter: /home/user_name/Jenkins-agent (for user name use "pwd" command on terminal)
+•	Number of executors: 1
+•	Launch method: Launch agent by connecting it to controller
+•	Availability: Keep this agent online as much as possible
+•	Save
+________________________________________
+2. Launch Slave Agent
+•	Click on the slave_node and run the commands listed under "Run from agent command line (UNIX).
+•	If unable to connect :
+o	Manage Jenkins> Security>Agents>TCP Port>Fixed
+o	Set port 50000
+________________________________________
+3. Run Job on Slave
+1.	New item:> Free style project
+o	Check Restrict where this project can be run ? Enter label slave_node
+2.	Add build step ? Execute Shell:
+echo "This build is running on the slave node"
+pwd
+3.	Save ? Build Now
+4.	Verify via Console Output ? Build ran on slave, master only orchestrates
+________________________________________
+4. Observations / Proof of Master-Slave Architecture
+•	Master schedules jobs and maintains logs/history
+•	Slave executes the build in its own workspace
+•	Demonstrates distributed build execution, even on a single system
+
+3. Jenkins CI CD pipeline
+sudo systemctl enable Jenkins
+sudo systemctl start Jenkins
+
+http://localhost:8080
+
+mkdir Jenkins
+cd Jenkins
+
+vim app.py
+print("Hello from Jenkins CI/CD Pipeline!")
+
+vim test.py
+def test_message():
+    assert "Hello" in "Hello from Jenkins CI/CD Pipeline!"
+
+vim requirements.txt
+pytest
+
+vim Jenkinsfile
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/vihasreddy58/devops_practive'
+            }
+        }
+
+        stage('Installing Dependencies') {
+            steps {
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest test_app.py > results.txt || true'
+                sh 'cat results.txt'
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                sh 'python3 app.py'
+            }
+        }
+
+        stage('Deploying Application') {
+            steps {
+                sh 'echo "Deployed successfully"'
+            }
+        }
+    }
+}
+git init
+git add .
+git commit -m "bla bla bla"
+git branch -M main
+git remote add origin <Link>
+git push -u origin main
+
+Jenkins
+New item -> name something -> pipeline -> ok
+Definition -> Pipeline script from SCM
+SCM -> Git
+Repository URL -> <paste repo URL>
+Credentials -> Add -> Username and Token as password -> Save
+Build Now -> ? tick mark we get
+
